@@ -6,17 +6,22 @@ public class MicroBot extends AdvancedRobot {
     private LUT lut;
     private State s, sPrime; // s and s'
     private Action a, aPrime; // a and a'
-    private double reward; // reward
+    private double reward;
     private final double epsilon = 0.2;
+    private double xLen;
+    private double yLen;
+
 
     // Scan for the enemy
     @Override
     public void run() {
-        while (true) {
-            turnRadarLeft(90);
-            reward = 0;
-            break;
-        }
+        // Initialization
+        lut = new LUT();
+        xLen = getBattleFieldWidth();
+        yLen = getBattleFieldHeight();
+
+        // Rotates the radar continuously
+        turnRadarRight(Double.POSITIVE_INFINITY);
     }
 
     // When an enemy is observed, Q-learning on the new state
@@ -26,8 +31,7 @@ public class MicroBot extends AdvancedRobot {
         sPrime.myEnergy = State.quantizeMyEnergy(getEnergy());
         sPrime.distance = State.quantizeDistance(e.getDistance());
         sPrime.enemyEnergy = State.quantizeEnemyEnergy(e.getEnergy());
-        sPrime.distanceToWall = State.quantizeDistanceToWall(
-                getX(), getY(), getBattleFieldWidth(), getBattleFieldHeight());
+        sPrime.distanceToWall = State.quantizeDistanceToWall(getX(), getY(), xLen, yLen);
 
         // 4. Update Q(s,a) with s'
         lut.updateLUT(reward, s, a, sPrime);
