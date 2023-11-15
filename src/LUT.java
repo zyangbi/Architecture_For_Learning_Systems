@@ -79,8 +79,6 @@ public class LUT implements LUTInterface {
     }
 
 
-
-
     @Override
     public int indexFor(double[] X) {
         return 0;
