@@ -5,19 +5,13 @@ public class State {
     public enum DistanceToWall { LOW, HIGH }
 
     // Public attributes
-    public MyEnergy myEnergy;
-    public DistanceToEnemy distance;
-    public EnemyEnergy enemyEnergy;
-    public DistanceToWall distanceToWall;
+    private MyEnergy myEnergy;
+    private DistanceToEnemy distance;
+    private EnemyEnergy enemyEnergy;
+    private DistanceToWall distanceToWall;
 
     // Constructor
-    public State(MyEnergy myEnergy, DistanceToEnemy distance,
-                 EnemyEnergy enemyEnergy, DistanceToWall distanceToWall) {
-        this.myEnergy = myEnergy;
-        this.distance = distance;
-        this.enemyEnergy = enemyEnergy;
-        this.distanceToWall = distanceToWall;
-    }
+    public State() {}
 
     // Get the size of states
     public static int getSize() {
@@ -83,6 +77,38 @@ public class State {
         }
     }
 
+    // Getter and Setter
+    public MyEnergy getMyEnergy() {
+        return myEnergy;
+    }
+
+    public void setMyEnergy(MyEnergy myEnergy) {
+        this.myEnergy = myEnergy;
+    }
+
+    public DistanceToEnemy getDistance() {
+        return distance;
+    }
+
+    public void setDistance(DistanceToEnemy distance) {
+        this.distance = distance;
+    }
+
+    public EnemyEnergy getEnemyEnergy() {
+        return enemyEnergy;
+    }
+
+    public void setEnemyEnergy(EnemyEnergy enemyEnergy) {
+        this.enemyEnergy = enemyEnergy;
+    }
+
+    public DistanceToWall getDistanceToWall() {
+        return distanceToWall;
+    }
+
+    public void setDistanceToWall(DistanceToWall distanceToWall) {
+        this.distanceToWall = distanceToWall;
+    }
 }
 
 

@@ -1,3 +1,4 @@
+import jdk.nashorn.api.tree.NewTree;
 import robocode.*;
 
 public class MicroBot extends AdvancedRobot {
@@ -7,8 +8,10 @@ public class MicroBot extends AdvancedRobot {
     private State sPrime; // sPrime
     private Action a; // a
     private double reward; // r
+    private double epsilon;
     private double xLen;
     private double yLen;
+    private boolean firstScan;
     private final double epsilonInitial = 0.8;
     private final int targetNumRounds = 8000;
 
@@ -21,18 +24,14 @@ public class MicroBot extends AdvancedRobot {
     // Scan for enemy
     @Override
     public void run() {
-        // Initialize Q table at first round
-        if (getTime() == 0) {
-            Q.initialiseLUT();
-            roundNumber = 0;
-        }
         // Initialize at each round
         s = null;
         sPrime = null;
-        a = null;
         reward = 0;
+        epsilon = decayEpsilon();
         xLen = getBattleFieldWidth();
         yLen = getBattleFieldHeight();
+        firstScan = true;
 
         // Rotates the radar continuously
         turnRadarRight(Double.POSITIVE_INFINITY);
@@ -42,20 +41,25 @@ public class MicroBot extends AdvancedRobot {
     @Override
     public void onScannedRobot(ScannedRobotEvent e) {
         // 3. Get s' from scanning
-        sPrime.myEnergy = State.quantizeMyEnergy(getEnergy());
-        sPrime.distance = State.quantizeDistance(e.getDistance());
-        sPrime.enemyEnergy = State.quantizeEnemyEnergy(e.getEnergy());
-        sPrime.distanceToWall = State.quantizeDistanceToWall(getX(), getY(), xLen, yLen);
+        sPrime = new State();
+        sPrime.setMyEnergy(State.quantizeMyEnergy(getEnergy()));
+        sPrime.setDistance(State.quantizeDistance(e.getDistance()));
+        sPrime.setEnemyEnergy(State.quantizeEnemyEnergy(e.getEnergy()));
+        sPrime.setDistanceToWall(State.quantizeDistanceToWall(getX(), getY(), xLen, yLen));
 
         // 4. Update Q(s,a) with s' and reward
-        Q.updateLUT(reward, s, a, sPrime);
-        reward = 0;
+        if (!firstScan) {
+            Q.updateLUT(reward, s, a, sPrime);
+            reward = 0;
+        } else {
+            firstScan = false;
+        }
 
         // 5. s = s'
         s = sPrime;
 
         // 1. Choose a from s by epsilon-greedy policy
-        a = Q.selectAction(s, decayEpsilon());
+        a = Q.selectAction(s, epsilon);
 
         // 2. Take action a
         setTurnGunRight(getHeading() - getGunHeading() + e.getBearing()); // Turn the gun towards enemy

@@ -8,7 +8,7 @@ public class LUT implements LUTInterface {
     private Map<Integer, Double> lut;
     private final int stateSize = State.getSize();
     private final int actionSize = Action.values().length;
-    private final double alpha = 0.9;
+    private final double alpha = 0.95;
     private final double gamma = 0.9;
 
     public LUT() {
@@ -35,7 +35,9 @@ public class LUT implements LUTInterface {
 
     // Update Q(s,a) in LUT
     public void updateLUT(double r, State s, Action a, State sPrime) {
-        if (s == null || a == null) return;
+        if (s == null || a == null || sPrime == null) {
+            throw new IllegalArgumentException();
+        }
 
         double Q = queryLUT(s, a);  // Q(s,a)
         Action aPrime = selectBestAction(sPrime);  // a' that maximize Q(s',a')
