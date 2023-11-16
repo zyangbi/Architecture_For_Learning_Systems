@@ -1,22 +1,25 @@
 import robocode.*;
 
 public class MicroBot extends AdvancedRobot {
-    private LUT Q; // Q(s,a)
+    private static LUT Q; // Q(s,a)
     private State s, sPrime; // s and s'
     private Action a, aPrime; // a and a'
-    private double reward;
-    private final double epsilon = 0.2;
+    private double reward; // r
     private double xLen;
     private double yLen;
-
+    private final double epsilon = 0.2;
 
     // Scan for enemy
     @Override
     public void run() {
-        // Initialization
-        Q = new LUT();
-        s = null;
-        a = null;
+        // Initialize Q table only at first round
+        if (Q == null) {
+            Q = new LUT();
+        }
+        // Initialize at each round
+        s = sPrime = null;
+        a = aPrime = null;
+        reward = 0;
         xLen = getBattleFieldWidth();
         yLen = getBattleFieldHeight();
 
