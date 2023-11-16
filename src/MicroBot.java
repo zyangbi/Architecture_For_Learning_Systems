@@ -1,9 +1,7 @@
-import robocode.AdvancedRobot;
-import robocode.BulletHitEvent;
-import robocode.ScannedRobotEvent;
+import robocode.*;
 
 public class MicroBot extends AdvancedRobot {
-    private LUT lut;
+    private LUT Q; // Q(s,a)
     private State s, sPrime; // s and s'
     private Action a, aPrime; // a and a'
     private double reward;
@@ -12,11 +10,13 @@ public class MicroBot extends AdvancedRobot {
     private double yLen;
 
 
-    // Scan for the enemy
+    // Scan for enemy
     @Override
     public void run() {
         // Initialization
-        lut = new LUT();
+        Q = new LUT();
+        s = null;
+        a = null;
         xLen = getBattleFieldWidth();
         yLen = getBattleFieldHeight();
 
@@ -24,7 +24,7 @@ public class MicroBot extends AdvancedRobot {
         turnRadarRight(Double.POSITIVE_INFINITY);
     }
 
-    // When an enemy is observed, Q-learning on the new state
+    // Update state and Q-value upon scanning an enemy
     @Override
     public void onScannedRobot(ScannedRobotEvent e) {
         // 3. Get s' from scanning
@@ -33,14 +33,15 @@ public class MicroBot extends AdvancedRobot {
         sPrime.enemyEnergy = State.quantizeEnemyEnergy(e.getEnergy());
         sPrime.distanceToWall = State.quantizeDistanceToWall(getX(), getY(), xLen, yLen);
 
-        // 4. Update Q(s,a) with s'
-        lut.updateLUT(reward, s, a, sPrime);
+        // 4. Update Q(s,a) with s' and reward
+        Q.updateLUT(reward, s, a, sPrime);
+        reward = 0;
 
         // 5. s = s'
         s = sPrime;
 
         // 1. Choose a from s by epsilon-greedy policy
-        a = lut.selectAction(s, epsilon);
+        a = Q.selectAction(s, epsilon);
 
         // 2. Take action a
         setTurnGunRight(getHeading() - getGunHeading() + e.getBearing()); // Turn the gun towards enemy
@@ -64,10 +65,47 @@ public class MicroBot extends AdvancedRobot {
         execute();
     }
 
+    // Update Q-value at the end of the game
     @Override
-    public void onBulletHit(BulletHitEvent event) {
-        reward += event.getBullet().getPower();
+    public void onRoundEnded(RoundEndedEvent event) {
+        Q.updateLUT(reward, s, a, sPrime);
     }
 
+    // Update rewards when events happen
+    @Override
+    public void onBulletHit(BulletHitEvent event) {
+        reward += 3.0;
+    }
 
+    @Override
+    public void onBulletMissed(BulletMissedEvent event) {
+        reward -= 1.0;
+    }
+
+    @Override
+    public void onHitByBullet(HitByBulletEvent event) {
+        reward -= 2.0;
+    }
+
+    @Override
+    public void onHitRobot(HitRobotEvent event) {
+        if (event.isMyFault()) {
+            reward -= 1.5;  // When my robot crashes with enemy
+        }
+    }
+
+    @Override
+    public void onHitWall(HitWallEvent event) {
+        reward -= 2.5;
+    }
+
+    @Override
+    public void onDeath(DeathEvent event) {
+        reward -= 3.0; // My robot dies
+    }
+
+    @Override
+    public void onRobotDeath(RobotDeathEvent event) {
+        reward += 4.0; // Enemy robot dies
+    }
 }
