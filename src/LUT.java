@@ -9,8 +9,8 @@ public class LUT implements LUTInterface {
     private Map<Integer, Double> lut;
     private final int stateSize = State.getSize();
     private final int actionSize = Action.values().length;
-    private final double alpha = 0.95;
-    private final double gamma = 0.9;
+    private final double alpha = 0.99;
+    private final double gamma = 0.95;
 
     public LUT() {
         this.lut = new HashMap<>();
@@ -88,7 +88,7 @@ public class LUT implements LUTInterface {
         if (state == null || action == null) {
             throw new IllegalArgumentException();
         }
-        return state.stateToIndex() * actionSize + action.ordinal();
+        return state.getStateIndex() * actionSize + action.ordinal();
     }
 
     @Override

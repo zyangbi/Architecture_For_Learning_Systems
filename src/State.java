@@ -1,44 +1,56 @@
 public class State {
-    public enum MyEnergy { LOW, MID, HIGH }
-    public enum DistanceToEnemy { LOW, MID, HIGH }
-    public enum EnemyEnergy { LOW, MID, HIGH }
-    public enum DistanceToWall { LOW, HIGH }
+    private enum MyEnergy { LOW, MID, HIGH }
+    private enum MyPosition { TOPLEFT, TOPRIGHT, BOTTOMLEFT, BOTTOMRIGHT}
+    private enum MyDistanceToWall { LOW, MID, HIGH }
+    private enum EnemyDistance { LOW, MID, HIGH }
+    private enum EnemyBearing { FORWARD, FORWARDLEFT, FORWARDRIGHT, BACKWARD, BACKWARDLEFT, BACKWARDRIGHT }
 
-    // Public attributes
     private MyEnergy myEnergy;
-    private DistanceToEnemy distance;
-    private EnemyEnergy enemyEnergy;
-    private DistanceToWall distanceToWall;
+    private MyPosition myPosition;
+    private MyDistanceToWall myDistanceToWall;
+    private EnemyDistance enemyDistance;
+    private EnemyBearing enemyBearing;
 
     // Constructor
-    public State() {}
+    public State(double x, double y, double xLen, double yLen, double energy, double enemyDistance, double enemyBearing) {
+        this.myEnergy = quantizeMyEnergy(energy);
+        this.myPosition = quantizeMyPosition(x, y, xLen, yLen);
+        this.myDistanceToWall = quantizeMyDistanceToWall(x, y, xLen, yLen);
+        this.enemyDistance = quantizeEnemyDistance(enemyDistance);
+        this.enemyBearing = quantizeEnemyBearing(enemyBearing);
+    }
 
     // Get the size of states
     public static int getSize() {
-        return MyEnergy.values().length * DistanceToEnemy.values().length
-                * EnemyEnergy.values().length * DistanceToWall.values().length;
+        return MyEnergy.values().length
+                * MyPosition.values().length
+                * MyDistanceToWall.values().length
+                * EnemyDistance.values().length
+                * EnemyBearing.values().length;
     }
 
     // Convert state to index
-    public int stateToIndex() {
+    public int getStateIndex() {
         int index = 0;
         int factor = 1;
 
         index += myEnergy.ordinal() * factor;
         factor *= MyEnergy.values().length;
 
-        index += distance.ordinal() * factor;
-        factor *= DistanceToEnemy.values().length;
+        index += myPosition.ordinal() * factor;
+        factor *= MyPosition.values().length;
 
-        index += enemyEnergy.ordinal() * factor;
-        factor *= EnemyEnergy.values().length;
+        index += myDistanceToWall.ordinal() * factor;
+        factor *= MyDistanceToWall.values().length;
 
-        index += distanceToWall.ordinal() * factor;
+        index += enemyDistance.ordinal() * factor;
+        factor *= EnemyDistance.values().length;
 
+        index += enemyBearing.ordinal() * factor;
         return index;
     }
 
-    public static MyEnergy quantizeMyEnergy(double myEnergyValue) {
+    private MyEnergy quantizeMyEnergy(double myEnergyValue) {
         if (myEnergyValue < 20) {
             return MyEnergy.LOW;
         } else if (myEnergyValue < 50) {
@@ -48,66 +60,56 @@ public class State {
         }
     }
 
-    public static DistanceToEnemy quantizeDistance(double distanceValue) {
-        if (distanceValue < 100) {
-            return DistanceToEnemy.LOW;
-        } else if (distanceValue < 300) {
-            return DistanceToEnemy.MID;
+    private MyPosition quantizeMyPosition(double x, double y, double xMax, double yMax) {
+        double xMid = xMax / 2.0;
+        double yMid = yMax / 2.0;
+
+        if (x < xMid && y < yMid) {
+            return MyPosition.BOTTOMLEFT;
+        } else if (x >= xMid && y < yMid) {
+            return MyPosition.BOTTOMRIGHT;
+        } else if (x < xMid && y >= yMid) {
+            return MyPosition.TOPLEFT;
         } else {
-            return DistanceToEnemy.HIGH;
+            return MyPosition.TOPRIGHT;
         }
     }
 
-    public static EnemyEnergy quantizeEnemyEnergy(double enemyEnergyValue) {
-        if (enemyEnergyValue < 20) {
-            return EnemyEnergy.LOW;
-        } else if (enemyEnergyValue < 50) {
-            return EnemyEnergy.MID;
-        } else {
-            return EnemyEnergy.HIGH;
-        }
-    }
-
-    public static DistanceToWall quantizeDistanceToWall(double x, double y, double xMax, double yMax) {
+    private MyDistanceToWall quantizeMyDistanceToWall(double x, double y, double xMax, double yMax) {
         double minDistance = Math.min(Math.min(x, y), Math.min(xMax - x, yMax - y));
         if (minDistance < 100) {
-            return DistanceToWall.LOW;
+            return MyDistanceToWall.LOW;
+        } else if (minDistance < 200){
+            return MyDistanceToWall.MID;
         } else {
-            return DistanceToWall.HIGH;
+            return MyDistanceToWall.LOW;
         }
     }
 
-    // Getter and Setter
-    public MyEnergy getMyEnergy() {
-        return myEnergy;
+    private EnemyDistance quantizeEnemyDistance(double distanceValue) {
+        if (distanceValue < 100) {
+            return EnemyDistance.LOW;
+        } else if (distanceValue < 300) {
+            return EnemyDistance.MID;
+        } else {
+            return EnemyDistance.HIGH;
+        }
     }
 
-    public void setMyEnergy(MyEnergy myEnergy) {
-        this.myEnergy = myEnergy;
-    }
-
-    public DistanceToEnemy getDistance() {
-        return distance;
-    }
-
-    public void setDistance(DistanceToEnemy distance) {
-        this.distance = distance;
-    }
-
-    public EnemyEnergy getEnemyEnergy() {
-        return enemyEnergy;
-    }
-
-    public void setEnemyEnergy(EnemyEnergy enemyEnergy) {
-        this.enemyEnergy = enemyEnergy;
-    }
-
-    public DistanceToWall getDistanceToWall() {
-        return distanceToWall;
-    }
-
-    public void setDistanceToWall(DistanceToWall distanceToWall) {
-        this.distanceToWall = distanceToWall;
+    private EnemyBearing quantizeEnemyBearing(double bearing) {
+        if (bearing >= -30 && bearing < 30) {
+            return EnemyBearing.FORWARD;
+        } else if (bearing >= 30 && bearing < 90) {
+            return EnemyBearing.FORWARDRIGHT;
+        } else if (bearing >= 90 && bearing < 150) {
+            return EnemyBearing.BACKWARDRIGHT;
+        } else if (bearing >= 150 || bearing < -150) {
+            return EnemyBearing.BACKWARD;
+        } else if (bearing >= -150 && bearing < -90) {
+            return EnemyBearing.BACKWARDLEFT;
+        } else { // bearing >= -90 && bearing < -30
+            return EnemyBearing.FORWARDLEFT;
+        }
     }
 }
 

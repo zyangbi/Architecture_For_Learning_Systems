@@ -1,25 +1,21 @@
-import Utils.LogFile;
 import robocode.*;
 
-import java.io.IOException;
-
 public class MicroBot extends AdvancedRobot {
+    private final int totalRounds = 3000;
+    private final double trainRatio = 0.8; // greedy-epsilon ratio in all rounds
+    private final double epsilonInitial = 0.8;
+    private static LUT Q; // Q(s,a)
+    private static int roundNumber;
+    private static int numWin100R; // number of wins in 100 rounds
+    private static double totalReward100R; // total reward in 100 rounds
+    //    private static double deltaQ100R; // change of Q(s,a) in 100 rounds
+//    private static LogFile log;
     private State s; // s
     private State sPrime; // sPrime
     private Action a; // a
     private double reward; // r
     private double epsilon;
-    private double xLen;
-    private double yLen;
     private boolean firstScan;
-    private static LUT Q; // Q(s,a)
-    private static int roundNumber;
-    private static int numWin100R; // number of wins in 100 rounds
-    private static double totalReward100R; // total reward in 100 rounds
-//    private static double deltaQ100R; // change of Q(s,a) in 100 rounds
-//    private static LogFile log;
-    private final double epsilonInitial = 0.8;
-    private final int targetNumRounds = 8000;
 
     static {
         Q = new LUT();
@@ -29,7 +25,7 @@ public class MicroBot extends AdvancedRobot {
         totalReward100R = 0.0;
 //        try {
 //            log = new LogFile("log/log.txt");
-//        } catch (IOException e) {
+//        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
     }
@@ -42,8 +38,6 @@ public class MicroBot extends AdvancedRobot {
         sPrime = null;
         reward = 0;
         epsilon = decayEpsilon();
-        xLen = getBattleFieldWidth();
-        yLen = getBattleFieldHeight();
         firstScan = true;
 
         // Print metrics every 100 rounds
@@ -52,6 +46,10 @@ public class MicroBot extends AdvancedRobot {
 //            log.println("Number of Wins in Last 100 Rounds: " + numWin100R);
 //            log.println("Total Reward in Last 100 Rounds: " + totalReward100R);
 //            log.println("===================================================\n\n");
+            out.println("\n\n==== Metrics after " + roundNumber + " rounds ====");
+            out.println("Number of Wins in Last 100 Rounds: " + numWin100R);
+            out.println("Total Reward in Last 100 Rounds: " + totalReward100R);
+            out.println("===================================================\n\n");
 
             numWin100R = 0;
             totalReward100R = 0;
@@ -65,11 +63,8 @@ public class MicroBot extends AdvancedRobot {
     @Override
     public void onScannedRobot(ScannedRobotEvent e) {
         // 3. Get s' from scanning
-        sPrime = new State();
-        sPrime.setMyEnergy(State.quantizeMyEnergy(getEnergy()));
-        sPrime.setDistance(State.quantizeDistance(e.getDistance()));
-        sPrime.setEnemyEnergy(State.quantizeEnemyEnergy(e.getEnergy()));
-        sPrime.setDistanceToWall(State.quantizeDistanceToWall(getX(), getY(), xLen, yLen));
+        sPrime = new State(getX(), getY(), getBattleFieldWidth(), getBattleFieldHeight(),
+                getEnergy(), e.getDistance(), e.getBearing());
 
         // 4. Update Q(s,a) with s' and reward
         if (!firstScan) {
@@ -89,20 +84,30 @@ public class MicroBot extends AdvancedRobot {
         // 2. Take action a
         setTurnGunRight(getHeading() - getGunHeading() + e.getBearing()); // Turn the gun towards enemy
         switch (a) {
-            case LEFT:
-                setTurnLeft(90);
-                break;
-            case RIGHT:
-                setTurnRight(90);
-                break;
             case FORWARD:
                 setAhead(100);
                 break;
-            case BACK:
+            case LEFTFORWARD:
+                setTurnLeft(90);
+                setAhead(100);
+                break;
+            case RIGHTFORWARD:
+                setTurnRight(90);
+                setAhead(100);
+                break;
+            case BACKWARD:
+                setBack(100);
+                break;
+            case LEFTBAKCWARD:
+                setTurnLeft(90);
+                setBack(100);
+                break;
+            case RIGHTBACKWARD:
+                setTurnRight(90);
                 setBack(100);
                 break;
             case FIRE:
-                fire(1);
+                fire(3);
                 break;
         }
         execute();
@@ -120,7 +125,7 @@ public class MicroBot extends AdvancedRobot {
     // Update rewards when events happen
     @Override
     public void onBulletHit(BulletHitEvent event) {
-        reward += 3.0;
+        reward += 5.0;
     }
 
     @Override
@@ -136,13 +141,13 @@ public class MicroBot extends AdvancedRobot {
     @Override
     public void onHitRobot(HitRobotEvent event) {
         if (event.isMyFault()) {
-            reward -= 2.0;  // When my robot crashes with enemy
+            reward -= 3.0;  // When my robot crashes with enemy
         }
     }
 
     @Override
     public void onHitWall(HitWallEvent event) {
-        reward -= 2.5;
+        reward -= 2.0;
     }
 
     @Override
@@ -152,13 +157,14 @@ public class MicroBot extends AdvancedRobot {
 
     @Override
     public void onWin(WinEvent event) {
-        reward += 10.0;
+        reward += 100.0;
         ++numWin100R;
     }
 
+    // Decay epsilon for first 80% rounds, and 0 epsilon for final 20% rounds
     private double decayEpsilon() {
-        if (roundNumber < targetNumRounds) {
-            return epsilonInitial * (1 - (double) roundNumber / targetNumRounds);
+        if (roundNumber < totalRounds * trainRatio) {
+            return epsilonInitial * (1 - (double) roundNumber / (totalRounds * trainRatio));
         } else {
             return 0.0;
         }

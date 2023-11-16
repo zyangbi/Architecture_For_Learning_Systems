@@ -1,7 +1,9 @@
 public enum Action {
     FORWARD,
-    BACK,
-    LEFT,
-    RIGHT,
+    BACKWARD,
+    LEFTFORWARD,
+    LEFTBAKCWARD,
+    RIGHTFORWARD,
+    RIGHTBACKWARD,
     FIRE
 }
