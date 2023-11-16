@@ -2,23 +2,34 @@ import robocode.*;
 
 public class MicroBot extends AdvancedRobot {
     private static LUT Q; // Q(s,a)
-    private State s, sPrime; // s and s'
-    private Action a, aPrime; // a and a'
+    private static int roundNumber;
+    private State s; // s
+    private State sPrime; // sPrime
+    private Action a; // a
     private double reward; // r
     private double xLen;
     private double yLen;
-    private final double epsilon = 0.2;
+    private final double epsilonInitial = 0.8;
+    private final int targetNumRounds = 8000;
+
+    static {
+        Q = new LUT();
+        Q.initialiseLUT();
+        roundNumber = 0;
+    }
 
     // Scan for enemy
     @Override
     public void run() {
-        // Initialize Q table only at first round
-        if (Q == null) {
-            Q = new LUT();
+        // Initialize Q table at first round
+        if (getTime() == 0) {
+            Q.initialiseLUT();
+            roundNumber = 0;
         }
         // Initialize at each round
-        s = sPrime = null;
-        a = aPrime = null;
+        s = null;
+        sPrime = null;
+        a = null;
         reward = 0;
         xLen = getBattleFieldWidth();
         yLen = getBattleFieldHeight();
@@ -44,7 +55,7 @@ public class MicroBot extends AdvancedRobot {
         s = sPrime;
 
         // 1. Choose a from s by epsilon-greedy policy
-        a = Q.selectAction(s, epsilon);
+        a = Q.selectAction(s, decayEpsilon());
 
         // 2. Take action a
         setTurnGunRight(getHeading() - getGunHeading() + e.getBearing()); // Turn the gun towards enemy
@@ -72,6 +83,7 @@ public class MicroBot extends AdvancedRobot {
     @Override
     public void onRoundEnded(RoundEndedEvent event) {
         Q.updateLUT(reward, s, a, sPrime);
+        roundNumber++;
     }
 
     // Update rewards when events happen
@@ -110,5 +122,13 @@ public class MicroBot extends AdvancedRobot {
     @Override
     public void onRobotDeath(RobotDeathEvent event) {
         reward += 4.0; // Enemy robot dies
+    }
+
+    private double decayEpsilon() {
+        if (roundNumber < targetNumRounds) {
+            return epsilonInitial * (1 - (double) roundNumber / targetNumRounds);
+        } else {
+            return 0.0;
+        }
     }
 }
