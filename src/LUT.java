@@ -1,8 +1,9 @@
+import Interface.LUTInterface;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 public class LUT implements LUTInterface {
     private Map<Integer, Double> lut;

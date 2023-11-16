@@ -1,9 +1,9 @@
-import jdk.nashorn.api.tree.NewTree;
+import Utils.LogFile;
 import robocode.*;
 
+import java.io.IOException;
+
 public class MicroBot extends AdvancedRobot {
-    private static LUT Q; // Q(s,a)
-    private static int roundNumber;
     private State s; // s
     private State sPrime; // sPrime
     private Action a; // a
@@ -12,6 +12,12 @@ public class MicroBot extends AdvancedRobot {
     private double xLen;
     private double yLen;
     private boolean firstScan;
+    private static LUT Q; // Q(s,a)
+    private static int roundNumber;
+    private static int numWin100R; // number of wins in 100 rounds
+    private static double totalReward100R; // total reward in 100 rounds
+//    private static double deltaQ100R; // change of Q(s,a) in 100 rounds
+//    private static LogFile log;
     private final double epsilonInitial = 0.8;
     private final int targetNumRounds = 8000;
 
@@ -19,6 +25,13 @@ public class MicroBot extends AdvancedRobot {
         Q = new LUT();
         Q.initialiseLUT();
         roundNumber = 0;
+        numWin100R = 0;
+        totalReward100R = 0.0;
+//        try {
+//            log = new LogFile("log/log.txt");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     // Scan for enemy
@@ -32,6 +45,17 @@ public class MicroBot extends AdvancedRobot {
         xLen = getBattleFieldWidth();
         yLen = getBattleFieldHeight();
         firstScan = true;
+
+        // Print metrics every 100 rounds
+        if (roundNumber % 100 == 0) {
+//            log.println("\n\n==== Metrics after " + roundNumber + " rounds ====");
+//            log.println("Number of Wins in Last 100 Rounds: " + numWin100R);
+//            log.println("Total Reward in Last 100 Rounds: " + totalReward100R);
+//            log.println("===================================================\n\n");
+
+            numWin100R = 0;
+            totalReward100R = 0;
+        }
 
         // Rotates the radar continuously
         turnRadarRight(Double.POSITIVE_INFINITY);
@@ -50,6 +74,7 @@ public class MicroBot extends AdvancedRobot {
         // 4. Update Q(s,a) with s' and reward
         if (!firstScan) {
             Q.updateLUT(reward, s, a, sPrime);
+            totalReward100R += reward;
             reward = 0;
         } else {
             firstScan = false;
@@ -87,6 +112,8 @@ public class MicroBot extends AdvancedRobot {
     @Override
     public void onRoundEnded(RoundEndedEvent event) {
         Q.updateLUT(reward, s, a, sPrime);
+        totalReward100R += reward;
+        reward = 0;
         roundNumber++;
     }
 
@@ -109,7 +136,7 @@ public class MicroBot extends AdvancedRobot {
     @Override
     public void onHitRobot(HitRobotEvent event) {
         if (event.isMyFault()) {
-            reward -= 1.5;  // When my robot crashes with enemy
+            reward -= 2.0;  // When my robot crashes with enemy
         }
     }
 
@@ -120,12 +147,13 @@ public class MicroBot extends AdvancedRobot {
 
     @Override
     public void onDeath(DeathEvent event) {
-        reward -= 3.0; // My robot dies
+        reward -= 5.0; // My robot dies
     }
 
     @Override
-    public void onRobotDeath(RobotDeathEvent event) {
-        reward += 4.0; // Enemy robot dies
+    public void onWin(WinEvent event) {
+        reward += 10.0;
+        ++numWin100R;
     }
 
     private double decayEpsilon() {

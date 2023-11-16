@@ -1,3 +1,5 @@
+package Interface;
+
 /**
  * Interface for the Look Up Table (LUT) Class
  */
