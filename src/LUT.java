@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -6,68 +8,69 @@ public class LUT implements LUTInterface {
     private Map<Integer, Double> lut;
     private final int stateSize = State.getSize();
     private final int actionSize = Action.values().length;
-    private final Random rand = new Random();
     private final double alpha = 0.9;
     private final double gamma = 0.9;
 
-
-//    public LUT (
-//            int argNumInputs,
-//            int[] argVariableFloor,
-//            int[] argVariableCeiling) {
-//
-//    }
+    public LUT() {
+        this.lut = new HashMap<>();
+    }
 
     @Override
     public void initialiseLUT() {
-        int size = stateSize * actionSize;
-        lut = new HashMap<>(size);
-        for (int i = 0; i < size; ++i) {
-            lut.put(i, rand.nextDouble());
+        lut.clear();
+        for (int i = 0; i < stateSize * actionSize; ++i) {
+            lut.put(i, Math.random());
         }
     }
 
+    // Query Q with s, a
     private double queryLUT(State state, Action action) {
+        if (state == null || action == null) {
+            throw new IllegalArgumentException();
+        }
+
         int index = StateActionToIndex(state, action);
         return lut.get(index);
     }
 
-    public Action selectAction(State s, double e) {
-        // random action with P = e
-        if (Math.random() < e) {
-            return selectRandomAction();
-        }
-        // greedy action with P = 1 - e
-        else {
-            return selectBestAction(s);
-        }
-    }
-
-
-
     // Update Q(s,a) in LUT
     public void updateLUT(double r, State s, Action a, State sPrime) {
-        double Q = queryLUT(s, a);  // Q(s,a)
+        if (s == null || a == null) return;
 
+        double Q = queryLUT(s, a);  // Q(s,a)
         Action aPrime = selectBestAction(sPrime);  // a' that maximize Q(s',a')
         double MaxQPrime= queryLUT(sPrime, aPrime);  // max Q(s',a')
 
-        // Compute updated Q(s,a)
         // Q(s,a) = Q(s,a) + alpha * (r + gamma * max Q(s',a') - Q(s,a))
         Q += alpha * (r + gamma * MaxQPrime - Q);
         lut.put(StateActionToIndex(s, a), Q);
     }
 
+    // Select an action by greedy-epsilon policy
+    public Action selectAction(State state, double e) {
+        // random action with P = e
+        if (state == null || Math.random() < e) {
+            return selectRandomAction();
+        }
+        // greedy action with P = 1 - e
+        else {
+            return selectBestAction(state);
+        }
+    }
+
     // Select a random action from the Action enum
     public Action selectRandomAction() {
-        return Action.values()[rand.nextInt(actionSize)];
+        return Action.values()[(int) (Math.random() * actionSize)];
     }
 
     // Select the best action based on Q-values
     public Action selectBestAction(State state) {
+        if (state == null) {
+            throw new IllegalArgumentException();
+        }
+
         double bestQ = -Double.MAX_VALUE;
         Action bestAction = null;
-
         for (Action action : Action.values()) {
             double Q = queryLUT(state, action);
             if (Q > bestQ) {
@@ -78,14 +81,35 @@ public class LUT implements LUTInterface {
         return bestAction;
     }
 
+    private int StateActionToIndex(State state, Action action) {
+        if (state == null || action == null) {
+            throw new IllegalArgumentException();
+        }
+        return state.stateToIndex() * actionSize + action.ordinal();
+    }
 
     @Override
     public int indexFor(double[] X) {
         return 0;
     }
 
-    private int StateActionToIndex(State state, Action action) {
-        return state.stateToIndex() * actionSize + action.ordinal();
+    @Override
+    public double outputFor(double[] X) {
+        return 0;
     }
 
+    @Override
+    public double train(double[] X, double argValue) {
+        return 0;
+    }
+
+    @Override
+    public void save(File argFile) {
+
+    }
+
+    @Override
+    public void load(String argFileName) throws IOException {
+
+    }
 }
