@@ -63,8 +63,8 @@ public class MicroBot extends AdvancedRobot {
     @Override
     public void onScannedRobot(ScannedRobotEvent e) {
         // 3. Get s' from scanning
-        sPrime = new State(getX(), getY(), getBattleFieldWidth(), getBattleFieldHeight(),
-                getEnergy(), e.getDistance(), e.getBearing());
+        sPrime = new State(getX(), getY(), getBattleFieldWidth(), getBattleFieldHeight(), getHeading(),
+                getEnergy(), e.getDistance(), e.getBearing()));
 
         // 4. Update Q(s,a) with s' and reward
         if (!firstScan) {
@@ -107,7 +107,7 @@ public class MicroBot extends AdvancedRobot {
                 setBack(100);
                 break;
             case FIRE:
-                fire(3);
+                fire(1);
                 break;
         }
         execute();
@@ -125,7 +125,7 @@ public class MicroBot extends AdvancedRobot {
     // Update rewards when events happen
     @Override
     public void onBulletHit(BulletHitEvent event) {
-        reward += 5.0;
+        reward += 2.0;
     }
 
     @Override
