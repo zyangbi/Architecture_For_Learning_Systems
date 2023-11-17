@@ -1,15 +1,24 @@
 import robocode.*;
 
 public class MicroBot extends AdvancedRobot {
-    private final int totalRounds = 3000;
-    private final double trainRatio = 0.8; // greedy-epsilon ratio in all rounds
-    private final double epsilonInitial = 0.8;
+    private final int TOTAL_ROUNDS = 3000;
+    private final double TRAIN_RATIO = 0.8; // percentage of rounds using greedy-epsilon
+    private final double EPSILON_INITIAL = 0.8;
+    private static final double REWARD_BULLET_HIT = 4.0;
+    private static final double REWARD_BULLET_MISSED = -2.0;
+    private static final double REWARD_HIT_BY_BULLET = -2.0;
+    private static final double REWARD_BEING_RAMMED = -2.0;
+    private static final double REWARD_HIT_WALL = -3.0;
+    private static final double REWARD_DEATH = -2.0;
+    private static final double REWARD_WIN = 10.0;
+
     private static LUT Q; // Q(s,a)
     private static int roundNumber;
     private static int numWin100R; // number of wins in 100 rounds
     private static double totalReward100R; // total reward in 100 rounds
     //    private static double deltaQ100R; // change of Q(s,a) in 100 rounds
 //    private static LogFile log;
+
     private State s; // s
     private State sPrime; // sPrime
     private Action a; // a
@@ -64,7 +73,7 @@ public class MicroBot extends AdvancedRobot {
     public void onScannedRobot(ScannedRobotEvent e) {
         // 3. Get s' from scanning
         sPrime = new State(getX(), getY(), getBattleFieldWidth(), getBattleFieldHeight(), getHeading(),
-                getEnergy(), e.getDistance(), e.getBearing()));
+                getEnergy(), e.getDistance(), e.getBearing());
 
         // 4. Update Q(s,a) with s' and reward
         if (!firstScan) {
@@ -83,33 +92,7 @@ public class MicroBot extends AdvancedRobot {
 
         // 2. Take action a
         setTurnGunRight(getHeading() - getGunHeading() + e.getBearing()); // Turn the gun towards enemy
-        switch (a) {
-            case FORWARD:
-                setAhead(100);
-                break;
-            case LEFTFORWARD:
-                setTurnLeft(90);
-                setAhead(100);
-                break;
-            case RIGHTFORWARD:
-                setTurnRight(90);
-                setAhead(100);
-                break;
-            case BACKWARD:
-                setBack(100);
-                break;
-            case LEFTBAKCWARD:
-                setTurnLeft(90);
-                setBack(100);
-                break;
-            case RIGHTBACKWARD:
-                setTurnRight(90);
-                setBack(100);
-                break;
-            case FIRE:
-                fire(1);
-                break;
-        }
+        a.setAction(this);
         execute();
     }
 
@@ -125,46 +108,46 @@ public class MicroBot extends AdvancedRobot {
     // Update rewards when events happen
     @Override
     public void onBulletHit(BulletHitEvent event) {
-        reward += 2.0;
+        reward += REWARD_BULLET_HIT;
     }
 
     @Override
     public void onBulletMissed(BulletMissedEvent event) {
-        reward -= 1.0;
+        reward += REWARD_BULLET_MISSED;
     }
 
     @Override
     public void onHitByBullet(HitByBulletEvent event) {
-        reward -= 2.0;
+        reward += REWARD_HIT_BY_BULLET;
     }
 
     @Override
     public void onHitRobot(HitRobotEvent event) {
-        if (event.isMyFault()) {
-            reward -= 3.0;  // When my robot crashes with enemy
+        if (!event.isMyFault()) {
+            reward += REWARD_BEING_RAMMED;
         }
     }
 
     @Override
     public void onHitWall(HitWallEvent event) {
-        reward -= 2.0;
+        reward += REWARD_HIT_WALL;
     }
 
     @Override
     public void onDeath(DeathEvent event) {
-        reward -= 5.0; // My robot dies
+        reward += REWARD_DEATH; // My robot dies
     }
 
     @Override
     public void onWin(WinEvent event) {
-        reward += 100.0;
+        reward += REWARD_WIN;
         ++numWin100R;
     }
 
     // Decay epsilon for first 80% rounds, and 0 epsilon for final 20% rounds
     private double decayEpsilon() {
-        if (roundNumber < totalRounds * trainRatio) {
-            return epsilonInitial * (1 - (double) roundNumber / (totalRounds * trainRatio));
+        if (roundNumber < TOTAL_ROUNDS * TRAIN_RATIO) {
+            return EPSILON_INITIAL * (1 - (double) roundNumber / (TOTAL_ROUNDS * TRAIN_RATIO));
         } else {
             return 0.0;
         }

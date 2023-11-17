@@ -20,7 +20,7 @@ public class LUT implements LUTInterface {
     public void initialiseLUT() {
         lut.clear();
         for (int i = 0; i < stateSize * actionSize; ++i) {
-            lut.put(i, Math.random());
+            lut.put(i, Math.random() * 10.0);
         }
     }
 
