@@ -1,15 +1,14 @@
 import os
 import matplotlib.pyplot as plt
 
-logFileName = 'epsilon_0.0'
-title = '2(b) On-policy Learning'
-logFileName = 'original'
-title = '2(a)  round=5000'
+
+file_name = 'original'
+title = '2(a) Total Reward vs Round Number'
+save_name = title
 
 round_numbers = []
 total_rewards = []
-# with open(os.path.join('..', 'out', 'production', 'Assignment2', 'MicroBot.data', logFileName), 'r') as file:
-with open(os.path.join('..', 'log', logFileName), 'r') as file:
+with open(os.path.join('..', 'log', file_name), 'r') as file:
     next(file)
     for line in file:
         round_number, _, total_reward = line.split(',')
@@ -21,4 +20,4 @@ plt.xlabel('Round Number')
 plt.ylabel('Total Reward')
 plt.title(title)
 plt.grid()
-plt.savefig(logFileName + '.png')
+plt.savefig(os.path.join('fig', save_name))

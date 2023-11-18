@@ -2,8 +2,8 @@ import Utils.LogFile;
 import robocode.*;
 
 public class MicroBot extends AdvancedRobot {
-    private static final int TOTAL_ROUNDS = 10000;
-    private static final String logFileName = "round_10000";
+    private static final int TOTAL_ROUNDS = 5000;
+    private static final String logFileName = "original";
     private static final double ALPHA = 0.99; // alpha in Q learning update
     private static final double GAMMA = 0.95; // gamma in Q learning update
     private static final double EPSILON_INITIAL = 0.8;
