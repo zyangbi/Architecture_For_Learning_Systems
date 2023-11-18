@@ -1,12 +1,12 @@
 import Utils.LogFile;
 import robocode.*;
 
-import java.io.File;
-
 public class MicroBot extends AdvancedRobot {
-    private final int TOTAL_ROUNDS = 3000;
-    private final double TRAIN_RATIO = 0.8; // percentage of rounds using greedy-epsilon
-    private final double EPSILON_INITIAL = 0.8;
+    private static final int TOTAL_ROUNDS = 3000;
+    private static final double ALPHA = 0.99; // alpha in Q learning update
+    private static final double GAMMA = 0.95; // gamma in Q learning update
+    private static final double EPSILON_INITIAL = 0.8;
+    private static final double EPSILON_RATIO = 0.8; // percentage where epsilon gets to 0
     private static final double REWARD_BULLET_HIT = 4.0;
     private static final double REWARD_BULLET_MISSED = -2.0;
     private static final double REWARD_HIT_BY_BULLET = -2.0;
@@ -30,7 +30,7 @@ public class MicroBot extends AdvancedRobot {
     private boolean firstScan;
 
     static {
-        Q = new LUT();
+        Q = new LUT(ALPHA, GAMMA);
         Q.initialiseLUT();
         roundNumber = 0;
         numWin100R = 0;
@@ -149,8 +149,8 @@ public class MicroBot extends AdvancedRobot {
 
     // Decay epsilon for first 80% rounds, and 0 epsilon for final 20% rounds
     private double decayEpsilon() {
-        if (roundNumber < TOTAL_ROUNDS * TRAIN_RATIO) {
-            return EPSILON_INITIAL * (1 - (double) roundNumber / (TOTAL_ROUNDS * TRAIN_RATIO));
+        if (roundNumber < TOTAL_ROUNDS * EPSILON_RATIO) {
+            return EPSILON_INITIAL * (1 - (double) roundNumber / (TOTAL_ROUNDS * EPSILON_RATIO));
         } else {
             return 0.0;
         }

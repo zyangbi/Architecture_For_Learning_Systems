@@ -7,13 +7,15 @@ import java.util.Map;
 
 public class LUT implements LUTInterface {
     private Map<Integer, Double> lut;
+    private double alpha;
+    private double gamma;
     private final int stateSize = State.getSize();
     private final int actionSize = Action.values().length;
-    private final double alpha = 0.99;
-    private final double gamma = 0.95;
 
-    public LUT() {
+    public LUT(double alpha, double gamma) {
         this.lut = new HashMap<>();
+        this.alpha = alpha;
+        this.gamma = gamma;
     }
 
     @Override
