@@ -2,11 +2,12 @@ import Utils.LogFile;
 import robocode.*;
 
 public class MicroBot extends AdvancedRobot {
-    private static final int TOTAL_ROUNDS = 3000;
+    private static final int TOTAL_ROUNDS = 10000;
+    private static final String logFileName = "round_10000";
     private static final double ALPHA = 0.99; // alpha in Q learning update
     private static final double GAMMA = 0.95; // gamma in Q learning update
     private static final double EPSILON_INITIAL = 0.8;
-    private static final double EPSILON_RATIO = 0.8; // percentage where epsilon gets to 0
+    private static final double EPSILON_RATIO = 0.7; // percentage where epsilon gets to 0
     private static final double REWARD_BULLET_HIT = 4.0;
     private static final double REWARD_BULLET_MISSED = -2.0;
     private static final double REWARD_HIT_BY_BULLET = -2.0;
@@ -14,7 +15,6 @@ public class MicroBot extends AdvancedRobot {
     private static final double REWARD_HIT_WALL = -3.0;
     private static final double REWARD_DEATH = -2.0;
     private static final double REWARD_WIN = 10.0;
-    private static final String logFileName = "log.txt";
 
     private static LUT Q; // Q(s,a)
     private static int roundNumber;
@@ -54,10 +54,7 @@ public class MicroBot extends AdvancedRobot {
 
         // Print log every 100 rounds
         if (roundNumber % 100 == 0) {
-            log.println("\n\n==== Metrics after " + roundNumber + " rounds ====");
-            log.println("Number of Wins in Last 100 Rounds: " + numWin100R);
-            log.println("Total Reward in Last 100 Rounds: " + totalReward100R);
-            log.println("===================================================\n\n");
+            printLog();
             numWin100R = 0;
             totalReward100R = 0;
         }
@@ -155,4 +152,13 @@ public class MicroBot extends AdvancedRobot {
             return 0.0;
         }
     }
+
+    private void printLog() {
+        if (roundNumber == 0) {
+            log.println("Round Number,Number of Wins,Total Reward");
+        } else {
+            log.println(roundNumber + "," + numWin100R + "," + totalReward100R);
+        }
+    }
+
 }
