@@ -2,19 +2,18 @@ package Utils;
 
 import robocode.RobocodeFileOutputStream;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.File;
 import java.io.PrintStream;
 
 public class LogFile {
-    private final PrintStream file;
+    private PrintStream file;
 
-    public LogFile(String fileName) throws Exception {
-        file = new PrintStream(new RobocodeFileOutputStream(fileName), true);
-    }
-
-    public void print(String str) {
-        file.print(str);
+    public LogFile(File directory, String fileName) {
+        try {
+            file = new PrintStream(new RobocodeFileOutputStream(new File(directory, fileName)), true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void println(String str) {

@@ -1,4 +1,7 @@
+import Utils.LogFile;
 import robocode.*;
+
+import java.io.File;
 
 public class MicroBot extends AdvancedRobot {
     private final int TOTAL_ROUNDS = 3000;
@@ -11,13 +14,13 @@ public class MicroBot extends AdvancedRobot {
     private static final double REWARD_HIT_WALL = -3.0;
     private static final double REWARD_DEATH = -2.0;
     private static final double REWARD_WIN = 10.0;
+    private static final String logFileName = "log.txt";
 
     private static LUT Q; // Q(s,a)
     private static int roundNumber;
     private static int numWin100R; // number of wins in 100 rounds
     private static double totalReward100R; // total reward in 100 rounds
-    //    private static double deltaQ100R; // change of Q(s,a) in 100 rounds
-//    private static LogFile log;
+    private static LogFile log;
 
     private State s; // s
     private State sPrime; // sPrime
@@ -32,11 +35,6 @@ public class MicroBot extends AdvancedRobot {
         roundNumber = 0;
         numWin100R = 0;
         totalReward100R = 0.0;
-//        try {
-//            log = new LogFile("log/log.txt");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
     }
 
     // Scan for enemy
@@ -49,17 +47,17 @@ public class MicroBot extends AdvancedRobot {
         epsilon = decayEpsilon();
         firstScan = true;
 
-        // Print metrics every 100 rounds
-        if (roundNumber % 100 == 0) {
-//            log.println("\n\n==== Metrics after " + roundNumber + " rounds ====");
-//            log.println("Number of Wins in Last 100 Rounds: " + numWin100R);
-//            log.println("Total Reward in Last 100 Rounds: " + totalReward100R);
-//            log.println("===================================================\n\n");
-            out.println("\n\n==== Metrics after " + roundNumber + " rounds ====");
-            out.println("Number of Wins in Last 100 Rounds: " + numWin100R);
-            out.println("Total Reward in Last 100 Rounds: " + totalReward100R);
-            out.println("===================================================\n\n");
+        // Initialize log at round 0
+        if (roundNumber == 0) {
+            log = new LogFile(getDataDirectory(), logFileName);
+        }
 
+        // Print log every 100 rounds
+        if (roundNumber % 100 == 0) {
+            log.println("\n\n==== Metrics after " + roundNumber + " rounds ====");
+            log.println("Number of Wins in Last 100 Rounds: " + numWin100R);
+            log.println("Total Reward in Last 100 Rounds: " + totalReward100R);
+            log.println("===================================================\n\n");
             numWin100R = 0;
             totalReward100R = 0;
         }
@@ -142,6 +140,11 @@ public class MicroBot extends AdvancedRobot {
     public void onWin(WinEvent event) {
         reward += REWARD_WIN;
         ++numWin100R;
+    }
+
+    @Override
+    public void onBattleEnded(BattleEndedEvent event) {
+        log.close();
     }
 
     // Decay epsilon for first 80% rounds, and 0 epsilon for final 20% rounds
