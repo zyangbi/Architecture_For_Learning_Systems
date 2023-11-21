@@ -1,4 +1,7 @@
-import Utils.LogFile;
+package robot;
+
+import lut.LUT;
+import utils.LogFile;
 import robocode.*;
 
 public class MicroBot extends AdvancedRobot {
@@ -16,7 +19,7 @@ public class MicroBot extends AdvancedRobot {
     private static final double REWARD_DEATH = -2.0;
     private static final double REWARD_WIN = 10.0;
 
-    private static LUT Q; // Q(s,a)
+    private static final LUT Q; // Q(s,a)
     private static int roundNumber;
     private static int numWin100R; // number of wins in 100 rounds
     private static double totalReward100R; // total reward in 100 rounds

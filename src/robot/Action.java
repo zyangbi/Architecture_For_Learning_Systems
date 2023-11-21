@@ -1,3 +1,5 @@
+package robot;
+
 import robocode.AdvancedRobot;
 
 public enum Action {

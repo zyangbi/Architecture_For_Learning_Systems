@@ -1,4 +1,8 @@
-import Interface.LUTInterface;
+package lut;
+
+import interfaces.LUTInterface;
+import robot.Action;
+import robot.State;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +40,7 @@ public class LUT implements LUTInterface {
         return lut.get(index);
     }
 
-    // Update Q(s,a) in LUT
+    // Update Q(s,a) in lut.LUT
     public void updateLUT(double r, State s, Action a, State sPrime) {
         if (s == null || a == null || sPrime == null) {
             throw new IllegalArgumentException();
@@ -63,7 +67,7 @@ public class LUT implements LUTInterface {
         }
     }
 
-    // Select a random action from the Action enum
+    // Select a random action from the robot.Action enum
     public Action selectRandomAction() {
         return Action.values()[(int) (Math.random() * actionSize)];
     }
