@@ -1,4 +1,4 @@
-package src.nninterface;
+package interfaces;
 
 import java.io.File;
 import java.io.IOException;

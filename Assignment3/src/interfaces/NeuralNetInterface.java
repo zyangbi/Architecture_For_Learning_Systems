@@ -1,4 +1,4 @@
-package src.nninterface;
+package interfaces;
 
 public interface NeuralNetInterface extends CommonInterface {
     final double bias = 1.0; // The input for each neurons bias weight
