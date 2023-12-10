@@ -148,7 +148,8 @@ public class MicroBot extends AdvancedRobot {
     @Override
     public void onBattleEnded(BattleEndedEvent event) {
         log.close();
-        Q.save(new File(getDataDirectory(), "test.txt"));
+        File file = new File(getDataDirectory(), "test.txt");
+        Q.save(file, getBattleFieldWidth(), getBattleFieldHeight());
     }
 
     // Decay epsilon for first 80% rounds, and 0 epsilon for final 20% rounds

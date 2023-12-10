@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fa194f48-1f63-4ba0-a12a-5f7199c1bcee" name="Changes" comment="save LUT">
-      <change afterPath="$PROJECT_DIR$/src/robot/MicroBot.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/LogFile.java" afterDir="false" />
+    <list default="true" id="fa194f48-1f63-4ba0-a12a-5f7199c1bcee" name="Changes" comment="fix State constructor from index error">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/lut/LUT.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lut/LUT.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/state/State.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/state/State.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -129,7 +128,7 @@
       <workItem from="1702094077573" duration="105000" />
       <workItem from="1702094239390" duration="16313000" />
       <workItem from="1702179029977" duration="9992000" />
-      <workItem from="1702200314637" duration="2992000" />
+      <workItem from="1702200314637" duration="7047000" />
     </task>
     <task id="LOCAL-00001" summary="multi layer NN">
       <option name="closed" value="true" />
@@ -187,7 +186,23 @@
       <option name="project" value="LOCAL" />
       <updated>1702200370944</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="add MicroBot">
+      <option name="closed" value="true" />
+      <created>1702203534703</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1702203534703</updated>
+    </task>
+    <task id="LOCAL-00009" summary="fix State constructor from index error">
+      <option name="closed" value="true" />
+      <created>1702206210587</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1702206210587</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -213,6 +228,8 @@
     <MESSAGE value="dequantize State" />
     <MESSAGE value="index to State" />
     <MESSAGE value="save LUT" />
-    <option name="LAST_COMMIT_MESSAGE" value="save LUT" />
+    <MESSAGE value="add MicroBot" />
+    <MESSAGE value="fix State constructor from index error" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix State constructor from index error" />
   </component>
 </project>

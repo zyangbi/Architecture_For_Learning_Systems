@@ -31,42 +31,33 @@ public class State {
     }
 
     // Construct state from index
-    public State(int index) {
+    public State(int index, double xLen, double yLen) {
+        this.xLen = xLen;
+        this.yLen = yLen;
         int factor;
 
-        factor = EnemyDistance.values().length;
-        this.enemyBearing = EnemyBearing.values()[index % factor];
-        index /= factor;
-
-        factor = MyHeading.values().length;
-        this.enemyDistance = EnemyDistance.values()[index % factor];
-        index /= factor;
-
-        factor = MyColumn.values().length;
-        this.myHeading = MyHeading.values()[index % factor];
+        factor = MyEnergy.values().length;
+        this.myEnergy = MyEnergy.values()[index % factor];
         index /= factor;
 
         factor = MyRow.values().length;
-        this.myColumn = MyColumn.values()[index % factor];
-        index /= factor;
-
-        factor = MyEnergy.values().length;
         this.myRow = MyRow.values()[index % factor];
         index /= factor;
 
-        this.myEnergy = MyEnergy.values()[index];
-    }
+        factor = MyColumn.values().length;
+        this.myColumn = MyColumn.values()[index % factor];
+        index /= factor;
 
-    // Convert state to an array
-    public double[] toArray() {
-        return new double[]{
-                dequantizeMyEnergy(),
-                dequantizeMyRow(),
-                dequantizeMyColumn(),
-                dequantizeMyHeading(),
-                dequantizeEnemyDistance(),
-                dequantizeEnemyBearing()
-        };
+        factor = MyHeading.values().length;
+        this.myHeading = MyHeading.values()[index % factor];
+        index /= factor;
+
+        factor = EnemyDistance.values().length;
+        this.enemyDistance = EnemyDistance.values()[index % factor];
+        index /= factor;
+
+        factor = EnemyBearing.values().length;
+        this.enemyBearing = EnemyBearing.values()[index % factor];
     }
 
     // Convert state to index
@@ -93,6 +84,17 @@ public class State {
         return index;
     }
 
+    // Convert state to an array
+    public double[] toArray() {
+        return new double[]{
+                dequantizeMyEnergy(),
+                dequantizeMyRow(),
+                dequantizeMyColumn(),
+                dequantizeMyHeading(),
+                dequantizeEnemyDistance(),
+                dequantizeEnemyBearing()
+        };
+    }
 
     // Get the size of states
     public static int getSize() {

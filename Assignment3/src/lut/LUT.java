@@ -95,13 +95,12 @@ public class LUT implements LUTInterface {
     }
 
     // Save LUT
-    @Override
-    public void save(File argFile) {
+    public void save(File argFile, double xLen, double yLen) {
         try (PrintStream file = new PrintStream(new RobocodeFileOutputStream(argFile))) {
             for (Map.Entry<Integer, Double> entry : lut.entrySet()) {
                 // Convert index to state and action
                 int index = entry.getKey();
-                State state = new State(index / actionSize);
+                State state = new State(index / actionSize, xLen, yLen);
                 Action action = Action.values()[index % actionSize];
 
                 // Convert state and action to string
@@ -135,6 +134,11 @@ public class LUT implements LUTInterface {
     @Override
     public double train(double[] X, double argValue) {
         return 0;
+    }
+
+    @Override
+    public void save(File argFile) {
+
     }
 
     @Override
