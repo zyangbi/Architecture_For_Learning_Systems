@@ -1,12 +1,14 @@
 package lut;
 
 import interfaces.LUTInterface;
+import robocode.RobocodeFileOutputStream;
 import state.Action;
 import state.State;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -95,7 +97,7 @@ public class LUT implements LUTInterface {
     // Save LUT
     @Override
     public void save(File argFile) {
-        try (FileWriter writer = new FileWriter(argFile)) {
+        try (PrintStream file = new PrintStream(new RobocodeFileOutputStream(argFile))) {
             for (Map.Entry<Integer, Double> entry : lut.entrySet()) {
                 // Convert index to state and action
                 int index = entry.getKey();
@@ -106,9 +108,9 @@ public class LUT implements LUTInterface {
                 String stateStr = Arrays.toString(state.toArray());
                 String actionStr = Arrays.toString(action.toOneHotVector());
 
-                writer.write(stateStr + "," + actionStr + "," + entry.getValue() + "\n");
+                file.println(stateStr + "," + actionStr + "," + entry.getValue());
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fa194f48-1f63-4ba0-a12a-5f7199c1bcee" name="Changes" comment="save LUT">
-      <change beforePath="$PROJECT_DIR$/src/NN/NeuralNet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/NN/NeuralNet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/robot/MicroBot.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/LogFile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/lut/LUT.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lut/LUT.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -22,6 +24,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5
@@ -43,7 +48,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/Zi/robocode/javadoc",
+    "last_opened_file_path": "C:/Users/Zi/robocode",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -57,14 +62,15 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Zi\CPEN_502\Assignment3\src\state" />
       <recent name="C:\Users\Zi\CPEN_502\Assignment3\src" />
+      <recent name="C:\Users\Zi\CPEN_502\Assignment3\src\state" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="robot" />
       <recent name="interfaces" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.AverageEpochs">
+  <component name="RunManager" selected="Application.MicroBot">
     <configuration name="AverageEpochs" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="run.AverageEpochs" />
       <module name="Assignment3" />
@@ -74,6 +80,14 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MicroBot" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="robocode.Robocode" />
+      <module name="Assignment3" />
+      <option name="WORKING_DIRECTORY" value="$USER_HOME$/robocode" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -91,6 +105,11 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="Application.MicroBot" />
+      <item itemvalue="Application.AverageEpochs" />
+      <item itemvalue="Application.SaveForPlot" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.AverageEpochs" />
@@ -110,6 +129,7 @@
       <workItem from="1702094077573" duration="105000" />
       <workItem from="1702094239390" duration="16313000" />
       <workItem from="1702179029977" duration="9992000" />
+      <workItem from="1702200314637" duration="2992000" />
     </task>
     <task id="LOCAL-00001" summary="multi layer NN">
       <option name="closed" value="true" />
@@ -159,7 +179,15 @@
       <option name="project" value="LOCAL" />
       <updated>1702199889006</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="save LUT">
+      <option name="closed" value="true" />
+      <created>1702200370944</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1702200370944</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
