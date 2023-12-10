@@ -11,6 +11,12 @@ public enum Action {
     RIGHTBACKWARD,
     FIRE;
 
+    public double[] toOneHotVector() {
+        double[] oneHotVector = new double[Action.values().length];
+        oneHotVector[this.ordinal()] = 1.0;
+        return oneHotVector;
+    }
+
     public void setAction(AdvancedRobot robot) {
         switch (this) {
             case FORWARD:
