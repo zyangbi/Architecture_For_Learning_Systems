@@ -5,7 +5,9 @@ import state.Action;
 import state.State;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -90,11 +92,32 @@ public class LUT implements LUTInterface {
         return bestAction;
     }
 
+    // Save LUT
+    @Override
+    public void save(File argFile) {
+        try (FileWriter writer = new FileWriter(argFile)) {
+            for (Map.Entry<Integer, Double> entry : lut.entrySet()) {
+                // Convert index to state and action
+                int index = entry.getKey();
+                State state = new State(index / actionSize);
+                Action action = Action.values()[index % actionSize];
+
+                // Convert state and action to string
+                String stateStr = Arrays.toString(state.toArray());
+                String actionStr = Arrays.toString(action.toOneHotVector());
+
+                writer.write(stateStr + "," + actionStr + "," + entry.getValue() + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private int StateActionToIndex(State state, Action action) {
         if (state == null || action == null) {
             throw new IllegalArgumentException();
         }
-        return state.getStateIndex() * actionSize + action.ordinal();
+        return state.getIndex() * actionSize + action.ordinal();
     }
 
     @Override
@@ -110,11 +133,6 @@ public class LUT implements LUTInterface {
     @Override
     public double train(double[] X, double argValue) {
         return 0;
-    }
-
-    @Override
-    public void save(File argFile) {
-
     }
 
     @Override

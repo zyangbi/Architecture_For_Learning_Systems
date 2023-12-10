@@ -49,8 +49,6 @@ public class NeuralNet implements NeuralNetInterface {
         this.yList = new ArrayList<>();
         this.deltaList = new ArrayList<>();
         this.deltaWList = new ArrayList<>();
-
-//        this.finalOutput = new double[][];
         this.errorList = new ArrayList<>();
 
         initializeNetwork();
