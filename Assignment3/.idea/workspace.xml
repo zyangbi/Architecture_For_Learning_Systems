@@ -5,11 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fa194f48-1f63-4ba0-a12a-5f7199c1bcee" name="Changes" comment="multi layer NN">
+      <change afterPath="$PROJECT_DIR$/src/interfaces/LUTInterface.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lut/LUT.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/state/Action.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/state/State.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Assignment2/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Assignment2/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assignment3.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment3.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/NN/NeuralNet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/NN/NeuralNet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/run/AverageEpochs.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/run/AverageEpochs.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/run/SaveForPlot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/run/SaveForPlot.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,7 +45,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/Zi/CPEN_502/Assignment3/src",
+    "last_opened_file_path": "C:/Users/Zi/CPEN_502/Assignment3/src/state",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -58,7 +59,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Zi\CPEN_502\Assignment3\src\state" />
       <recent name="C:\Users\Zi\CPEN_502\Assignment3\src" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="interfaces" />
     </key>
   </component>
   <component name="RunManager" selected="Application.AverageEpochs">
@@ -106,6 +111,7 @@
       <workItem from="1702093737120" duration="38000" />
       <workItem from="1702094077573" duration="105000" />
       <workItem from="1702094239390" duration="16313000" />
+      <workItem from="1702179029977" duration="1351000" />
     </task>
     <task id="LOCAL-00001" summary="multi layer NN">
       <option name="closed" value="true" />
