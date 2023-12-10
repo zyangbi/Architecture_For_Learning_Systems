@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fa194f48-1f63-4ba0-a12a-5f7199c1bcee" name="Changes" comment="multi layer NN">
-      <change afterPath="$PROJECT_DIR$/src/interfaces/LUTInterface.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/lut/LUT.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/state/Action.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/state/State.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Assignment2/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Assignment2/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="fa194f48-1f63-4ba0-a12a-5f7199c1bcee" name="Changes" comment="add LUT, State, Action" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -111,7 +104,7 @@
       <workItem from="1702093737120" duration="38000" />
       <workItem from="1702094077573" duration="105000" />
       <workItem from="1702094239390" duration="16313000" />
-      <workItem from="1702179029977" duration="1351000" />
+      <workItem from="1702179029977" duration="2680000" />
     </task>
     <task id="LOCAL-00001" summary="multi layer NN">
       <option name="closed" value="true" />
@@ -129,7 +122,15 @@
       <option name="project" value="LOCAL" />
       <updated>1702116243818</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="add LUT, State, Action">
+      <option name="closed" value="true" />
+      <created>1702181704751</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1702181704752</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -151,6 +152,7 @@
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
     <MESSAGE value="multi layer NN" />
-    <option name="LAST_COMMIT_MESSAGE" value="multi layer NN" />
+    <MESSAGE value="add LUT, State, Action" />
+    <option name="LAST_COMMIT_MESSAGE" value="add LUT, State, Action" />
   </component>
 </project>
