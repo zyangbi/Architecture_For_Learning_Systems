@@ -4,12 +4,11 @@ import interfaces.LUTInterface;
 import robocode.RobocodeFileOutputStream;
 import state.Action;
 import state.State;
+import utils.StringUtil;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +29,7 @@ public class LUT implements LUTInterface {
     public void initialiseLUT() {
         lut.clear();
         for (int i = 0; i < stateSize * actionSize; ++i) {
-            lut.put(i, Math.random() * 10.0);
+            lut.put(i, Math.random());
         }
     }
 
@@ -103,11 +102,10 @@ public class LUT implements LUTInterface {
                 State state = new State(index / actionSize, xLen, yLen);
                 Action action = Action.values()[index % actionSize];
 
-                // Convert state and action to string
-                String stateStr = Arrays.toString(state.toArray());
-                String actionStr = Arrays.toString(action.toOneHotVector());
-
-                file.println(stateStr + "," + actionStr + "," + entry.getValue());
+                // Convert state to CSV string
+                String stateStr = StringUtil.arrayToStr(state.toNormalizedArray());
+                String actionStr = StringUtil.arrayToStr(action.toOneHotVector());
+                file.println(stateStr + " " + actionStr + " " + entry.getValue());
             }
         } catch (Exception e) {
             e.printStackTrace();

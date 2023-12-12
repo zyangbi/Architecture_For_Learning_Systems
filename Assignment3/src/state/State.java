@@ -85,14 +85,14 @@ public class State {
     }
 
     // Convert state to an array
-    public double[] toArray() {
+    public double[] toNormalizedArray() {
         return new double[]{
-                dequantizeMyEnergy(),
-                dequantizeMyRow(),
-                dequantizeMyColumn(),
-                dequantizeMyHeading(),
-                dequantizeEnemyDistance(),
-                dequantizeEnemyBearing()
+                dequantizeMyEnergy() / 100.0,
+                dequantizeMyRow() / yLen,
+                dequantizeMyColumn() / xLen,
+                dequantizeMyHeading() / 360.0,
+                dequantizeEnemyDistance() / 400.0,
+                dequantizeEnemyBearing() / 180.0
         };
     }
 

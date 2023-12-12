@@ -8,21 +8,21 @@ import utils.LogFile;
 import java.io.File;
 
 public class MicroBot extends AdvancedRobot {
-    private static final int TOTAL_ROUNDS = 10;
+    private static final int TOTAL_ROUNDS = 10000;
     private static final String logFileName = "original";
     private static final double ALPHA = 0.99; // alpha in Q learning update
     private static final double GAMMA = 0.95; // gamma in Q learning update
     private static final double EPSILON_INITIAL = 0.8;
     private static final double EPSILON_RATIO = 0.7; // percentage where epsilon gets to 0
-    private static final double REWARD_BULLET_HIT = 4.0;
-    private static final double REWARD_BULLET_MISSED = -2.0;
-    private static final double REWARD_HIT_BY_BULLET = -2.0;
-    private static final double REWARD_BEING_RAMMED = -2.0;
-    private static final double REWARD_HIT_WALL = -3.0;
-    private static final double REWARD_DEATH = -2.0;
-    private static final double REWARD_WIN = 10.0;
+    private static final double REWARD_BULLET_HIT = 0.4;
+    private static final double REWARD_BULLET_MISSED = -0.2;
+    private static final double REWARD_HIT_BY_BULLET = -0.2;
+    private static final double REWARD_BEING_RAMMED = -0.2;
+    private static final double REWARD_HIT_WALL = -0.3;
+    private static final double REWARD_DEATH = -0.3;
+    private static final double REWARD_WIN = 1.0;
 
-    private static final LUT Q; // Q(s,a)
+    private static final LUT lut; // Q(s,a)
     private static int roundNumber;
     private static int numWin100R; // number of wins in 100 rounds
     private static double totalReward100R; // total reward in 100 rounds
@@ -36,8 +36,8 @@ public class MicroBot extends AdvancedRobot {
     private boolean firstScan;
 
     static {
-        Q = new LUT(ALPHA, GAMMA);
-        Q.initialiseLUT();
+        lut = new LUT(ALPHA, GAMMA);
+        lut.initialiseLUT();
         roundNumber = 0;
         numWin100R = 0;
         totalReward100R = 0.0;
@@ -78,7 +78,7 @@ public class MicroBot extends AdvancedRobot {
 
         // 4. Update Q(s,a) with s' and reward
         if (!firstScan) {
-            Q.updateLUT(reward, s, a, sPrime);
+            lut.updateLUT(reward, s, a, sPrime);
             totalReward100R += reward;
             reward = 0;
         } else {
@@ -89,7 +89,7 @@ public class MicroBot extends AdvancedRobot {
         s = sPrime;
 
         // 1. Choose a from s by epsilon-greedy policy
-        a = Q.selectAction(s, epsilon);
+        a = lut.selectAction(s, epsilon);
 
         // 2. Take action a
         setTurnGunRight(getHeading() - getGunHeading() + e.getBearing()); // Turn the gun towards enemy
@@ -100,7 +100,7 @@ public class MicroBot extends AdvancedRobot {
     // Update Q-value at the end of the game
     @Override
     public void onRoundEnded(RoundEndedEvent event) {
-        Q.updateLUT(reward, s, a, sPrime);
+        lut.updateLUT(reward, s, a, sPrime);
         totalReward100R += reward;
         reward = 0;
         roundNumber++;
@@ -149,7 +149,7 @@ public class MicroBot extends AdvancedRobot {
     public void onBattleEnded(BattleEndedEvent event) {
         log.close();
         File file = new File(getDataDirectory(), "test.txt");
-        Q.save(file, getBattleFieldWidth(), getBattleFieldHeight());
+        lut.save(file, getBattleFieldWidth(), getBattleFieldHeight());
     }
 
     // Decay epsilon for first 80% rounds, and 0 epsilon for final 20% rounds
