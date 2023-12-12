@@ -4,12 +4,11 @@ import interfaces.LUTInterface;
 import robocode.RobocodeFileOutputStream;
 import state.Action;
 import state.State;
+import utils.StringUtil;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +29,7 @@ public class LUT implements LUTInterface {
     public void initialiseLUT() {
         lut.clear();
         for (int i = 0; i < stateSize * actionSize; ++i) {
-            lut.put(i, Math.random() * 10.0);
+            lut.put(i, Math.random());
         }
     }
 
@@ -56,7 +55,9 @@ public class LUT implements LUTInterface {
 
         // Q(s,a) = Q(s,a) + alpha * (r + gamma * max Q(s',a') - Q(s,a))
         Q += alpha * (r + gamma * MaxQPrime - Q);
-        lut.put(StateActionToIndex(s, a), Q);
+
+        int index = StateActionToIndex(s, a);
+        lut.put(index, Q);
     }
 
     // Select an action by greedy-epsilon policy
@@ -97,17 +98,15 @@ public class LUT implements LUTInterface {
     // Save LUT
     public void save(File argFile, double xLen, double yLen) {
         try (PrintStream file = new PrintStream(new RobocodeFileOutputStream(argFile))) {
-            for (Map.Entry<Integer, Double> entry : lut.entrySet()) {
+            for (int i = 0; i < stateSize * actionSize; ++i) {
                 // Convert index to state and action
-                int index = entry.getKey();
-                State state = new State(index / actionSize, xLen, yLen);
-                Action action = Action.values()[index % actionSize];
+                State state = new State(i / actionSize, xLen, yLen);
+                Action action = Action.values()[i % actionSize];
 
-                // Convert state and action to string
-                String stateStr = Arrays.toString(state.toArray());
-                String actionStr = Arrays.toString(action.toOneHotVector());
-
-                file.println(stateStr + "," + actionStr + "," + entry.getValue());
+                // Convert state to CSV string
+                String stateStr = StringUtil.arrayToStr(state.toNormalizedArray());
+                String actionStr = StringUtil.arrayToStr(action.toOneHotVector());
+                file.println(stateStr + " " + actionStr + " " + lut.get(i));
             }
         } catch (Exception e) {
             e.printStackTrace();

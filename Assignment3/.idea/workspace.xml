@@ -4,10 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fa194f48-1f63-4ba0-a12a-5f7199c1bcee" name="Changes" comment="fix State constructor from index error">
+    <list default="true" id="fa194f48-1f63-4ba0-a12a-5f7199c1bcee" name="Changes" comment="train NN on LUT dataset">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/lut/LUT.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lut/LUT.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lut/trainLUT.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lut/trainLUT.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/state/Action.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/state/Action.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/state/State.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/state/State.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/DatasetUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/DatasetUtil.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,6 +50,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "main",
     "last_opened_file_path": "C:/Users/Zi/robocode",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -104,14 +108,44 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="TestSigmoid" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="run.TestSigmoid" />
+      <module name="Assignment3" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="run.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="trainLUT" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="lut.trainLUT" />
+      <module name="Assignment3" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="lut.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <list>
       <item itemvalue="Application.MicroBot" />
+      <item itemvalue="Application.TestSigmoid" />
+      <item itemvalue="Application.trainLUT" />
       <item itemvalue="Application.AverageEpochs" />
       <item itemvalue="Application.SaveForPlot" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.trainLUT" />
         <item itemvalue="Application.AverageEpochs" />
+        <item itemvalue="Application.TestSigmoid" />
         <item itemvalue="Application.SaveForPlot" />
       </list>
     </recent_temporary>
@@ -128,7 +162,8 @@
       <workItem from="1702094077573" duration="105000" />
       <workItem from="1702094239390" duration="16313000" />
       <workItem from="1702179029977" duration="9992000" />
-      <workItem from="1702200314637" duration="7047000" />
+      <workItem from="1702200314637" duration="7437000" />
+      <workItem from="1702288409238" duration="30194000" />
     </task>
     <task id="LOCAL-00001" summary="multi layer NN">
       <option name="closed" value="true" />
@@ -202,7 +237,23 @@
       <option name="project" value="LOCAL" />
       <updated>1702206210587</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="fix State constructor from index error">
+      <option name="closed" value="true" />
+      <created>1702207789449</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1702207789449</updated>
+    </task>
+    <task id="LOCAL-00011" summary="train NN on LUT dataset">
+      <option name="closed" value="true" />
+      <created>1702365271542</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1702365271542</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -230,6 +281,23 @@
     <MESSAGE value="save LUT" />
     <MESSAGE value="add MicroBot" />
     <MESSAGE value="fix State constructor from index error" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix State constructor from index error" />
+    <MESSAGE value="train NN on LUT dataset" />
+    <option name="LAST_COMMIT_MESSAGE" value="train NN on LUT dataset" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/robot/MicroBot.java</url>
+          <line>151</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/robot/MicroBot.java</url>
+          <line>40</line>
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

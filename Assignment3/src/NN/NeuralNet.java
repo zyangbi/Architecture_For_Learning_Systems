@@ -1,6 +1,7 @@
 package NN;
 
 import interfaces.NeuralNetInterface;
+import utils.FileUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +17,6 @@ public class NeuralNet implements NeuralNetInterface {
     private final double a; // lower bound of sigmoid
     private final double b; // upper bound of sigmoid
     private final double errorThreshold; // stop when error is lower than threshold
-    private final boolean isBinary; // 1 for binary dataset, 0 for bipolar dataset
     private ArrayList<double[][]> wList; // weights for each layer
     private double[] y0; // outputs for input layer
     private ArrayList<double[]> yList; // outputs for hidden and output layer
@@ -33,7 +33,6 @@ public class NeuralNet implements NeuralNetInterface {
                      double argMomentumTerm,
                      double argA,
                      double argB,
-                     boolean argIsBinary,
                      double argErrorThreshold) {
         this.numInputs = argNumInputs;
         this.hiddenOutputLayerSizes = argHiddenOutputLayerSizes;
@@ -41,7 +40,6 @@ public class NeuralNet implements NeuralNetInterface {
         this.momentumTerm = argMomentumTerm;
         this.a = argA;
         this.b = argB;
-        this.isBinary = argIsBinary;
         this.errorThreshold = argErrorThreshold;
 
         this.wList = new ArrayList<>();
@@ -81,22 +79,6 @@ public class NeuralNet implements NeuralNetInterface {
             deltaList.add(delta);
             deltaWList.add(delta_w);
             prevSize = size;
-        }
-    }
-
-    /**
-     * Initialize inputs and outputs of the training set
-     */
-    private void initializeInputOutput() {
-        // Binary training set
-        if (isBinary) {
-            this.input = new double[][]{{0.0, 0.0}, {0.0, 1.0}, {1.0, 0.0}, {1.0, 1.0}};
-            this.output = new double[]{0.0, 1.0, 1.0, 0.0};
-        }
-        // Bipolar training set
-        else {
-            this.input = new double[][]{{-1.0, -1.0}, {-1.0, 1.0}, {1.0, -1.0}, {1.0, 1.0}};
-            this.output = new double[]{-1.0, 1.0, 1.0, -1.0};
         }
     }
 
@@ -192,8 +174,9 @@ public class NeuralNet implements NeuralNetInterface {
      * Train NN by epochs until error is lower than threshold
      * error = sum((Y - y)^2) / 2
      */
-    public int trainNN() {
-        initializeInputOutput();
+    public int trainNN(double[][] X, double[] Y) {
+        input = X;
+        output = Y;
 
         errorList.clear();
         double error;
@@ -205,7 +188,7 @@ public class NeuralNet implements NeuralNetInterface {
             }
             error /= 2.0;
             errorList.add(error);
-            if (epoch % 10 == 0) {
+            if (epoch % 100 == 0) {
                 System.out.println("Epoch: " + epoch + ", Error: " + error + "\n");
             }
             epoch++;
