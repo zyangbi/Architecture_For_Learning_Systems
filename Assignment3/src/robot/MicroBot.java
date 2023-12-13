@@ -9,7 +9,7 @@ import java.io.File;
 
 public class MicroBot extends AdvancedRobot {
     private static final int TOTAL_ROUNDS = 10000;
-    private static final String logFileName = "original";
+    private static final String logFileName = "LUT_train";
     private static final double ALPHA = 0.99; // alpha in Q learning update
     private static final double GAMMA = 0.95; // gamma in Q learning update
     private static final double EPSILON_INITIAL = 0.8;
@@ -148,7 +148,7 @@ public class MicroBot extends AdvancedRobot {
     @Override
     public void onBattleEnded(BattleEndedEvent event) {
         log.close();
-        File file = new File(getDataDirectory(), "test.txt");
+        File file = new File(getDataDirectory(), "lut");
         lut.save(file, getBattleFieldWidth(), getBattleFieldHeight());
     }
 

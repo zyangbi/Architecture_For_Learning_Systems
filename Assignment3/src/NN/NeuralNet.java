@@ -1,7 +1,6 @@
 package NN;
 
 import interfaces.NeuralNetInterface;
-import utils.FileUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,31 +15,30 @@ public class NeuralNet implements NeuralNetInterface {
     private final double momentumTerm;
     private final double a; // lower bound of sigmoid
     private final double b; // upper bound of sigmoid
-    private final double errorThreshold; // stop when error is lower than threshold
     private ArrayList<double[][]> wList; // weights for each layer
     private double[] y0; // outputs for input layer
     private ArrayList<double[]> yList; // outputs for hidden and output layer
     private ArrayList<double[]> deltaList; // errors for each layer
     private ArrayList<double[][]> deltaWList; // change in weights for each layer
-    private double[][] input; // training input
-    private double[] output; // training output
     private ArrayList<Double> errorList; // record errors
 
 
     public NeuralNet(int argNumInputs,
-                     int[] argHiddenOutputLayerSizes,
+                     int[] argHiddenLayerSizes,
+                     int argNumOutputs,
                      double argLearningRate,
                      double argMomentumTerm,
                      double argA,
-                     double argB,
-                     double argErrorThreshold) {
+                     double argB) {
         this.numInputs = argNumInputs;
-        this.hiddenOutputLayerSizes = argHiddenOutputLayerSizes;
+        this.hiddenOutputLayerSizes = new int[argHiddenLayerSizes.length + 1];
+        System.arraycopy(argHiddenLayerSizes, 0, this.hiddenOutputLayerSizes, 0, argHiddenLayerSizes.length);
+        this.hiddenOutputLayerSizes[this.hiddenOutputLayerSizes.length - 1] = argNumOutputs;
+
         this.learningRate = argLearningRate;
         this.momentumTerm = argMomentumTerm;
         this.a = argA;
         this.b = argB;
-        this.errorThreshold = argErrorThreshold;
 
         this.wList = new ArrayList<>();
         this.y0 = new double[numInputs + 1];
@@ -161,43 +159,68 @@ public class NeuralNet implements NeuralNetInterface {
     }
 
     /**
-     * One epoch of training
+     * One step of training
      */
-    @Override
-    public double train(double[] X, double Y) {
+    public double trainOneStep(double[] X, double Y) {
         double error = forwardPropagation(X, Y);
         backPropagation(Y);
         return error;
     }
 
     /**
-     * Train NN by epochs until error is lower than threshold
-     * error = sum((Y - y)^2) / 2
+     * One epoch of training
      */
-    public int trainNN(double[][] X, double[] Y) {
-        input = X;
-        output = Y;
+    public double trainOneEpoch(double[][] X, double[] Y) {
+        double totalError = 0.0;
+        int n = Y.length;
 
+        for(int i = 0; i < n; ++i) {
+            double error = trainOneStep(X[i], Y[i]);
+            totalError += Math.pow(error, 2);
+        }
+
+        double RMSError = Math.sqrt(totalError / n);
+        return RMSError;
+    }
+    
+    /**
+     * Train NN by epochs until error is lower than threshold
+     */
+    public double[] trainNN(double[][] X, double[] Y,
+                            double errorThreshold, int epochThreshold) {
         errorList.clear();
-        double totalError, RMSError;
-        int n = output.length;
+        double RMSError = 0.0;
         int epoch = 0;
+
         do {
-            totalError = 0.0;
-            for(int i = 0; i < n; ++i) {
-                double error = train(input[i], output[i]);
-                totalError += Math.pow(error, 2);
-            }
-            RMSError = Math.sqrt(totalError / n);
+            RMSError = trainOneEpoch(X, Y);
             errorList.add(RMSError);
             if (epoch % 100 == 0) {
                 System.out.println("Epoch: " + epoch + ", RMS Error: " + RMSError + "\n");
             }
             epoch++;
-        } while (RMSError > errorThreshold);
-        return epoch;
+        } while (RMSError > errorThreshold && epoch < epochThreshold);
+
+        return new double[] {epoch, RMSError};
     }
 
+//    public int trainNN(double[][] X, double[] Y, double errorThreshold) {
+//        errorList.clear();
+//        double RMSError;
+//        int epoch = 0;
+//
+//        do {
+//            RMSError = trainOneEpoch(X, Y);
+//            errorList.add(RMSError);
+////            if (epoch % 10 == 0) {
+////                System.out.println("Epoch: " + epoch + ", RMS Error: " + RMSError + "\n");
+////            }
+////            epoch++;
+//        } while (RMSError > errorThreshold);
+//
+//        return epoch;
+//    }
+//
     public void saveErrorList(String filename) {
         try (PrintWriter writer = new PrintWriter(filename)) {
             for (Double error : errorList) {
@@ -226,6 +249,11 @@ public class NeuralNet implements NeuralNetInterface {
     @Override
     public double customSigmoid(double x) {
         return ((b - a) / (1.0 + Math.exp(-x))) + a;
+    }
+
+    @Override
+    public double train(double[] X, double argValue) {
+        return 0;
     }
 
     @Override
