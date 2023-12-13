@@ -179,20 +179,22 @@ public class NeuralNet implements NeuralNetInterface {
         output = Y;
 
         errorList.clear();
-        double error;
+        double totalError, RMSError;
+        int n = output.length;
         int epoch = 0;
         do {
-            error = 0.0;
-            for(int i = 0; i < output.length; ++i) {
-                error += Math.pow(train(input[i], output[i]), 2.0);
+            totalError = 0.0;
+            for(int i = 0; i < n; ++i) {
+                double error = train(input[i], output[i]);
+                totalError += Math.pow(error, 2);
             }
-            error /= 2.0;
-            errorList.add(error);
+            RMSError = Math.sqrt(totalError / n);
+            errorList.add(RMSError);
             if (epoch % 100 == 0) {
-                System.out.println("Epoch: " + epoch + ", Error: " + error + "\n");
+                System.out.println("Epoch: " + epoch + ", RMS Error: " + RMSError + "\n");
             }
             epoch++;
-        } while (error > errorThreshold);
+        } while (RMSError > errorThreshold);
         return epoch;
     }
 

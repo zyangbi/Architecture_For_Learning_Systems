@@ -9,7 +9,8 @@ import java.io.File;
 public class trainLUT {
     public static void main(String[] args) {
         try {
-            String file = "out/production/Assignment3/robot/MicroBot.data/test.txt";
+            String file = "out/production/Assignment3/robot/MicroBot.data/" +
+                    "test.txt";
             double[][] dataset = FileUtil.readData(new File(file));
             double[][] input = DatasetUtil.getInput(dataset);
             double[] output = DatasetUtil.getOutput(dataset);
@@ -18,13 +19,13 @@ public class trainLUT {
 
             NeuralNet nn = new NeuralNet(
                     numInputs,
-                    new int[]{20, 1},
+                    new int[]{5, 5, 1},
                     0.2,
                     0.8,
                     -1.0,
                     1.0,
                     0.05);
-            double epochs = nn.trainNN(input, normalizedOutput);
+            int epochs = nn.trainNN(input, normalizedOutput);
             System.out.println("Finish training in " + epochs + "epochs");
 
         } catch (Exception e) {
